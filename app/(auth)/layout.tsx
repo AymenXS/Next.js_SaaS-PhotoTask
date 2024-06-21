@@ -1,4 +1,4 @@
-const Layout = ({children}:{children: React.ReactNode}) => {
-  return <main className="auth">Layout</main>;
+const Layout = ({ children }: { children: React.ReactNode }) => {
+  return <main className="auth">{children}</main>;
 };
 export default Layout;
