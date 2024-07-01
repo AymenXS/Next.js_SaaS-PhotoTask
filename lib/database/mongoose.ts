@@ -16,7 +16,7 @@ if (!cached) {
   };
 }
 
-export const connectedToDatabase = async () => {
+export const connectToDatabase = async () => {
   if (cached.connection) return cached.connection;
 
   if (!MONGODB_URL) {
