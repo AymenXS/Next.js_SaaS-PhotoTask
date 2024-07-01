@@ -34,11 +34,11 @@ export async function POST(req: Request) {
   // Create a new Svix instance with your secret.
   const wh = new Webhook(WEBHOOK_SECRET);
 
-  let event: WebhookEvent;
+  let evt: WebhookEvent;
 
   // Verify the payload with the headers
   try {
-    event = wh.verify(body, {
+    evt = wh.verify(body, {
       'svix-id': svix_id,
       'svix-timestamp': svix_timestamp,
       'svix-signature': svix_signature,
@@ -51,12 +51,12 @@ export async function POST(req: Request) {
   }
 
   // Get the ID and type
-  const { id } = event.data;
-  const eventType = event.type;
+  const { id } = evt.data;
+  const eventType = evt.type;
 
   // CREATE
   if (eventType === 'user.created') {
-    const { id, email_addresses, image_url, first_name, last_name, username } = event.data;
+    const { id, email_addresses, image_url, first_name, last_name, username } = evt.data;
 
     const user = {
       clerkId: id,
@@ -83,7 +83,7 @@ export async function POST(req: Request) {
 
   // UPDATE
   if (eventType === 'user.updated') {
-    const { id, image_url, first_name, last_name, username } = event.data;
+    const { id, image_url, first_name, last_name, username } = evt.data;
 
     const user = {
       firstName: first_name!,
@@ -99,7 +99,7 @@ export async function POST(req: Request) {
 
   // DELETE
   if (eventType === 'user.deleted') {
-    const { id } = event.data;
+    const { id } = evt.data;
 
     const deletedUser = await deleteUser(id!);
 
@@ -111,3 +111,5 @@ export async function POST(req: Request) {
 
   return new Response('', { status: 200 });
 }
+
+export const maxDuration = 25;
