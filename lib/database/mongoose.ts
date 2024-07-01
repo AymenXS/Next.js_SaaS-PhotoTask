@@ -23,8 +23,19 @@ export const connectToDatabase = async () => {
     throw new Error('Please define the MONGODB_URL environment variable inside .env.local');
   }
 
-  if (cached.promise) return cached.promise || mongoose.connect(MONGODB_URL, { dbName: 'PhotoTask', bufferCommands: false });
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(MONGODB_URL, {
+      dbName: 'PhotoTask',
+      bufferCommands: false,
+    });
+  }
 
-  cached.connection = await cached.promise;
+  try {
+    cached.connection = await cached.promise;
+  } catch (error) {
+    cached.promise = null;
+    throw error;
+  }
+
   return cached.connection;
 };
